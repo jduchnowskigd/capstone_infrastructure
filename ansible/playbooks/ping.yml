@@ -1,0 +1,16 @@
+---
+- name: Install Git on Ubuntu
+  hosts: ec2-3-252-120-183.eu-west-1.compute.amazonaws.com
+  become: yes
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: yes
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+      become: yes

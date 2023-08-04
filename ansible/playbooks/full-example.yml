@@ -1,0 +1,82 @@
+# Specify the path to the jar file or the docker image name
+
+---
+- name: Deploy File
+  hosts: all
+  become: yes
+  become_method: sudo
+  vars:
+    file_path: "{{file}}" 
+
+  tasks:
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: true
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+    - name: Determine file type
+      set_fact:
+        file_type: "{{ file_path.split('.')[-1] }}"
+    - name: Add Docker GPG apt Key
+      when: file_type != 'jar'
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+        
+    - name: Install Java (if file type is jar)
+      when: file_type == 'jar'
+      apt:
+        name: openjdk-17-jdk
+        state: present
+
+    - name: Install Docker (if file type is docker image)
+      when: file_type != 'jar'
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Save docker image as tar
+      when: file_type != 'jar'
+      community.docker.docker_image:
+        name: "{{file_path}}"
+        archive_path: "../artifacts/spring-petclinic.tar"
+        source: local
+        state: present
+      delegate_to: 127.0.0.1
+
+    - name: Copy jar file to target host
+      when: file_type == 'jar'
+      copy:
+        src: "{{file_path}}"
+        dest: "/opt/spring-petclinic.jar"
+
+    - name: Copy tar file to target host
+      when: file_type != 'jar'
+      copy:
+        src: "../artifacts/spring-petclinic.tar"
+        dest: "/opt/{{ file_path | basename }}"
+
+    - name: Deploy jar file
+      when: file_type == 'jar'
+      shell: "nohup java -jar /opt/spring-petclinic.jar"
+
+    - name: Load all image(s) from the given tar file
+      when: file_type != 'jar'
+      community.docker.docker_image_load:
+        path: "/opt/{{ file| basename }}"
+      register: result
+    - name: Deploy docker image
+      when: file_type != 'jar'
+      command: "docker run -d -p 8080:8080 {{ file_path | basename }}"
