@@ -8,7 +8,6 @@ pipeline {
     stage('Infrastructure automation') {
 
       steps {
-          sh 'cd terraform'
           sh 'terraform init'
           sh 'terraform fmt'
           sh 'terraform validate'
