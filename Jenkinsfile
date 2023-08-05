@@ -5,17 +5,21 @@ pipeline {
   
   stages {
     
-    stage('Infrastructure automation') {
-
-      steps {
-          sh 'terraform init'
-          sh 'terraform fmt'
-          sh 'terraform validate'
-          sh 'terraform plan'
-  }
-}
-
-
+ stage('terraform init'){
+            steps{
+                sh 'terraform init' 
+            }
+        }
+        stage('terraform validate'){
+            steps{
+                sh 'terraform validate' 
+            }
+        }
+           stage('terraform plan'){
+            steps{
+                sh 'terraform plan' 
+            }
+        }
 //Manual apply job
 
 //Manual destroy job

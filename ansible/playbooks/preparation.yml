@@ -1,0 +1,44 @@
+---
+- name: Install Terraform, Java, and Jenkins on Ubuntu
+  hosts: ec2-54-229-127-29.eu-west-1.compute.amazonaws.com
+  become: yes
+
+  tasks:
+    - name: Update package cache
+      apt:
+        update_cache: yes
+
+    - name: Install Java
+      apt:
+        name: openjdk-8-jdk
+        state: present
+
+    - name: Install Terraform
+      become_user: "{{ ansible_ssh_user }}"
+      shell: |
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+        sudo apt-get update && sudo apt-get install terraform
+
+    - name: Download Jenkins WAR file
+      get_url:
+        url: "https://updates.jenkins-ci.org/download/war/{{ jenkins_version }}/jenkins.war"
+        dest: "/opt/jenkins.war"
+      vars:
+        jenkins_version: "2.303.2"  # Change this version to the desired one
+
+    - name: Install Jenkins dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - default-jre
+        - default-jdk
+        - git
+        - wget
+
+    - name: Start Jenkins service
+      systemd:
+        name: jenkins
+        state: started
+        enabled: yes
