@@ -1,0 +1,1 @@
+Na runnerach powinien być terraform
