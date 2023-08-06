@@ -17,7 +17,10 @@ pipeline {
         }
            stage('terraform plan'){
             steps{
-                sh 'terraform plan' 
+                 withAWS(credentials: 'sam-jenkins-demo-credentials', region: 'us-west-2') {
+                    sh 'terraform plan' 
+                 }
+                
             }
         }
 //Manual apply job

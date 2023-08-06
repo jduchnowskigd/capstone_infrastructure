@@ -1,6 +1,6 @@
 ---
 - name: Install Terraform, Java, and Jenkins on Ubuntu
-  hosts: ec2-54-229-127-29.eu-west-1.compute.amazonaws.com
+  hosts: webservers
   become: yes
 
   tasks:
