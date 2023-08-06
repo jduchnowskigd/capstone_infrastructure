@@ -10,7 +10,7 @@
 
     - name: Install Java
       apt:
-        name: openjdk-8-jdk
+        name: openjdk-17-jdk
         state: present
 
     - name: Install Jenkins dependencies
@@ -28,3 +28,5 @@
         name: jenkins
         state: started
         enabled: yes
+
+        #should also install all the other steps that I've used for the servers I've set up manually

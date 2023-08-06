@@ -7,18 +7,18 @@ pipeline {
     
  stage('terraform init'){
             steps{
-                sh 'terraform init' 
+                sh '/usr/local/bin/terraform init' 
             }
         }
         stage('terraform validate'){
             steps{
-                sh 'terraform validate' 
+                sh '/usr/local/bin/terraform validate' 
             }
         }
            stage('terraform plan'){
             steps{
                  withAWS(credentials: 'capstone-access', region: 'eu-west-1') {
-                    sh 'terraform plan' 
+                    sh '/usr/local/bin/terraform plan' 
                  }
                 
             }
@@ -26,14 +26,14 @@ pipeline {
         stage('Provision resources') {
             steps {
                 input message: 'Do you want to continue?'
-                sh 'terraform apply -auto-approve'
+                sh '/usr/local/bin/terraform apply -auto-approve'
             }
         }
 
         stage("Destroy resources") {
             steps {
                 input message: 'Do you want to continue?'
-                sh 'terraform destroy -auto-approve'
+                sh '/usr/local/bin/terraform destroy -auto-approve'
             }
         }
   }
