@@ -17,7 +17,7 @@ pipeline {
         }
            stage('terraform plan'){
             steps{
-                 withAWS(credentials: 'sam-jenkins-demo-credentials', region: 'us-west-2') {
+                 withAWS(credentials: 'capstone-access', region: 'eu-west-1') {
                     sh 'terraform plan' 
                  }
                 

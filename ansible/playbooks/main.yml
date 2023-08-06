@@ -26,14 +26,14 @@
           - python3-setuptools
         state: latest
         update_cache: true
-    - name: Determine file type
-      set_fact:
-        file_type: "{{ file_path.split('.')[-1] }}"
     - name: Add Docker GPG apt Key
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
-        
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
     - name: Install Java (if file type is jar)
       apt:
         name: openjdk-17-jdk
@@ -50,4 +50,8 @@
         state: present
     
     - name: Install Terraform
+      shell: |
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+        sudo apt-get update && sudo apt-get install terraform
       
