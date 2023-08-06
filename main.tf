@@ -100,7 +100,7 @@ resource "aws_lb_target_group" "terramino" {
   name     = "learn-asg-terramino"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = aws_vpc.app_vpc.id
+  vpc_id   =  aws_vpc.app_vpc.id
 }
 
 resource "aws_autoscaling_attachment" "terramino" {

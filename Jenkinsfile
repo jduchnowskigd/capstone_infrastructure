@@ -23,8 +23,18 @@ pipeline {
                 
             }
         }
-//Manual apply job
+        stage('Provision resources') {
+            steps {
+                input message: 'Do you want to continue?'
+                sh 'terraform apply -auto-approve'
+            }
+        }
 
-//Manual destroy job
+        stage("Destroy resources") {
+            steps {
+                input message: 'Do you want to continue?'
+                sh 'terraform destroy -auto-approve'
+            }
+        }
   }
 }

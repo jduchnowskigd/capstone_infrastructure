@@ -1,3 +1,6 @@
 
 [webservers]
 ubuntu@ec2-54-229-127-29.eu-west-1.compute.amazonaws.com
+
+[cicd]
+ubuntu@ec2-63-33-42-158.eu-west-1.compute.amazonaws.com
