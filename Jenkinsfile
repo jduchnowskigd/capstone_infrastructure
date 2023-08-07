@@ -18,7 +18,7 @@ pipeline {
            stage('terraform plan'){
             steps{
                  withAWS(credentials: 'capstone-access', region: 'eu-west-1') {
-                    sh '/usr/local/bin/terraform plan' 
+                    sh '/usr/local/bin/terraform plan -input=false' 
                  }
                 
             }
