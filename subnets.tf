@@ -23,3 +23,16 @@ resource "aws_subnet" "public_eu_west_1b" {
     Project = "2023_internship_gda"
   }
 }
+
+resource "aws_subnet" "public_eu_west_1c" {
+  vpc_id                  = aws_vpc.app_vpc.id
+  cidr_block              =  "10.0.6.0/24"
+  availability_zone       = "eu-west-1c"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name    = "subnet"
+    Owner   = "jduchnowski"
+    Project = "2023_internship_gda"
+  }
+}

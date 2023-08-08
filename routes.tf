@@ -31,6 +31,11 @@ resource "aws_route_table_association" "public_rt_asso_b" {
 
 }
 
+resource "aws_route_table_association" "public_rt_asso_c" {
+  subnet_id      = aws_subnet.public_eu_west_1c.id
+  route_table_id = aws_route_table.public_rt.id
+
+}
 # resource "aws_route_table_association" "public_rt_asso_igw" {
 #   gateway_id      = aws_internet_gateway.igw.id
 #   route_table_id = aws_route_table.public_rt.id
